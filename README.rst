@@ -45,7 +45,8 @@ optional arguments::
     -t/--transport {rabbitmq,redis,stdout,zmq}
                       log transport method
                       default is stdout
-
+    -c CONFIG, --configfile CONFIG
+                          ini config file path
 Background
 ==========
 

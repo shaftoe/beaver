@@ -1,6 +1,4 @@
 import os
-import ujson as json
-import socket
 import datetime
 import pika
 
@@ -9,7 +7,9 @@ import beaver.transport
 
 class RabbitmqTransport(beaver.transport.Transport):
 
-    def __init__(self):
+    def __init__(self, configfile):
+        super(RabbitmqTransport, self).__init__(configfile)
+
         # Create our connection object
         rabbitmq_address = os.environ.get("RABBITMQ_HOST", "localhost")
         rabbitmq_port    = os.environ.get("RABBITMQ_PORT", 5672)

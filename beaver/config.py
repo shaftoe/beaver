@@ -59,4 +59,10 @@ class Config():
     def getfilepaths(self):
         return self._data.keys()
 
+    def gettype(self, filename):
+        try:
+            return self._config.get(filename, 'type')
+        except ConfigParser.NoSectionError:
+            return "file"
+
     #  TODO: add support for any file property

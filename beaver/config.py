@@ -66,3 +66,4 @@ class Config():
             return "file"
 
     #  TODO: add support for any file property
+    #  TODO: add support for symlinks

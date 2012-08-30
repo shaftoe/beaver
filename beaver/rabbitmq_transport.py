@@ -47,7 +47,7 @@ class RabbitmqTransport(beaver.transport.Transport):
         )
 
     def callback(self, filename, lines):
-        timestamp = datetime.datetime.now().isoformat()
+        timestamp = datetime.datetime.utcnow().isoformat()
         for line in lines:
             self.channel.basic_publish(
                 exchange=self.rabbitmq_exchange,

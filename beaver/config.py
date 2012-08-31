@@ -1,4 +1,5 @@
 import ConfigParser
+import os
 import beaver.utils as utils
 
 
@@ -53,7 +54,7 @@ class Config():
                 raise Exception('%s: missing mandatory config "type"'
                     % filename
                 )
-            inputs[filename] = self._config.items(filename)
+            inputs[os.path.realpath(filename)] = self._config.items(filename)
         return inputs
 
     def getfilepaths(self):
@@ -61,9 +62,8 @@ class Config():
 
     def gettype(self, filename):
         try:
-            return self._config.get(filename, 'type')
+            return self._config.get(os.path.realpath(filename), 'type')
         except ConfigParser.NoSectionError:
             return "file"
 
     #  TODO: add support for any file property
-    #  TODO: add support for symlinks

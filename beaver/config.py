@@ -1,5 +1,6 @@
 import ConfigParser
 import os
+import glob
 import beaver.utils as utils
 
 
@@ -54,7 +55,13 @@ class Config():
                 raise Exception('%s: missing mandatory config "type"'
                     % filename
                 )
-            inputs[os.path.realpath(filename)] = self._config.items(filename)
+            globs = glob.glob(filename)
+            if not globs:
+                raise Exception('%s is not a valid file path' % filename)
+            else:
+                for globbed in glob.glob(filename):
+                    configs = {x[0]: x[1] for x in self._config.items(filename)}
+                    inputs[os.path.realpath(globbed)] = configs
         return inputs
 
     def getfilepaths(self):

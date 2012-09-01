@@ -6,6 +6,7 @@ import pika
 
 import beaver.transport
 
+
 class RabbitmqTransport(beaver.transport.Transport):
 
     def __init__(self):
@@ -45,37 +46,21 @@ class RabbitmqTransport(beaver.transport.Transport):
             routing_key=self.rabbitmq_key
         )
 
-        # Export hostname
-        self.current_host = socket.gethostname()
-
-
     def callback(self, filename, lines):
         timestamp = datetime.datetime.now().isoformat()
         for line in lines:
-            json_msg = json.dumps({
-                '@source': "file://{0}{1}".format(self.current_host, filename),
-                '@type': "file",
-                '@tags': [],
-                '@fields': {},
-                '@timestamp': timestamp,
-                '@source_host': self.current_host,
-                '@source_path': filename,
-                '@message': line.strip(os.linesep),
-            })
             self.channel.basic_publish(
                 exchange=self.rabbitmq_exchange,
                 routing_key=self.rabbitmq_key,
-                body=json_msg,
+                body=self.format(filename, timestamp, line),
                 properties=pika.BasicProperties(
                     content_type="text/json",
                     delivery_mode=1
                 )
             )
 
-
     def interrupt(self):
         self.connection.close()
-
 
     def unhandled(self):
         return True

@@ -53,19 +53,16 @@ parser.set_defaults(
     path=os.environ.get("BEAVER_PATH", '/var/log'),
     files=files,
     transport=os.environ.get("BEAVER_TRANSPORT", 'stdout'),
-    config=False
+    config='/dev/null'
 )
 
 
 args = parser.parse_args()
 
-configfile = False
-# Get files from config file if given
-if args.config:
-    configfile = beaver.config.Config(args.config)
-    try:
-        args.files.extend(configfile.getfilepaths())
-    except AttributeError:
-        args.files = configfile.getfilepaths()
+configfile = beaver.config.Config(args.config)
+try:
+    args.files.extend(configfile.getfilepaths())
+except AttributeError:
+    args.files = configfile.getfilepaths()
 
 beaver.worker.run_worker(args, configfile)

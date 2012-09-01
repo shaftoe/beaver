@@ -64,13 +64,31 @@ class Config():
                     inputs[os.path.realpath(globbed)] = configs
         return inputs
 
+    def _getfield(self, filename, field):
+        return self._data.get(os.path.realpath(filename))[field]
+
     def getfilepaths(self):
         return self._data.keys()
 
     def gettype(self, filename):
         try:
-            return self._config.get(os.path.realpath(filename), 'type')
-        except ConfigParser.NoSectionError:
+            result = self._getfield(filename, 'type')
+            return result if result else "file"
+        except TypeError:
             return "file"
+
+    def gettags(self, filename):
+        try:
+            result = self._getfield(filename, 'tags').split(",")
+            return result if result else []
+        except TypeError, err:
+            return []
+
+    def getfields(self, filename):
+        try:
+            result = self._getfield(filename, 'add_field').split(",")
+            return result if result else []
+        except TypeError, err:
+            return []
 
     #  TODO: add support for any file property

@@ -1,12 +1,13 @@
-import datetime
 import logging
+
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=logging.DEBUG)
 
 
 def log(line):
     """Log a single line"""
-    logging.info("[%s] %s", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), line)
+    logging.info(line)
 
 
 def warn(line):
     """Log a single warning line"""
-    logging.warning("[%s] %s", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), line)
+    logging.warning(line)

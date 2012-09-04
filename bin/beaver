@@ -42,6 +42,8 @@ parser.add_argument('-p', '--path', help='path to log files', dest='path')
 parser.add_argument('-f', '--files', help='space-separated filelist to watch. Overrides --path argument', dest='files', nargs='+')
 parser.add_argument('-t', '--transport', help='log transport method', dest='transport', choices=['rabbitmq', 'redis', 'stdout', 'zmq'])
 parser.add_argument('-c', '--configfile', help='ini config file path', dest='config')
+parser.add_argument('-l', '--loglevel', help='logging verbosity level [DEBUG|INFO|WARNING|ERROR|CRITICAL]', dest='loglevel')
+
 
 
 # Support env variable parsing as well
@@ -54,15 +56,17 @@ parser.set_defaults(
     path=os.environ.get("BEAVER_PATH", '/var/log'),
     files=files,
     transport=os.environ.get("BEAVER_TRANSPORT", 'stdout'),
-    config='/dev/null'
+    config='/dev/null',
+    loglevel="WARNING"
 )
-
-# Setup logging facility
-logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', level=logging.DEBUG)
-
 
 args = parser.parse_args()
 
+
+# Setup logging facility
+logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', level=args.loglevel.upper())
+
+# Setup config file
 configfile = beaver.config.Config(args.config)
 try:
     args.files.extend(configfile.getfilepaths())

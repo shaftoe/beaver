@@ -50,7 +50,7 @@ class RabbitmqTransport(beaver.transport.Transport):
     def callback(self, filename, lines):
         timestamp = datetime.datetime.now().isoformat()
         for line in lines:
-            logging.debug('rabbitmq transport - sending message %s' % line)
+            logging.debug('rabbitmq transport - sending message "%s"' % line)
             self.channel.basic_publish(
                 exchange=self.rabbitmq_exchange,
                 routing_key=self.rabbitmq_key,

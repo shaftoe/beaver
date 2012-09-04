@@ -10,6 +10,7 @@ class RabbitmqTransport(beaver.transport.Transport):
 
     def __init__(self, configfile):
         super(RabbitmqTransport, self).__init__(configfile)
+        logging.debug('Initlialize Rabbitmq transport - begin')
 
         # Create our connection object
         rabbitmq_address = os.environ.get("RABBITMQ_HOST", "localhost")
@@ -46,11 +47,12 @@ class RabbitmqTransport(beaver.transport.Transport):
             queue=rabbitmq_queue,
             routing_key=self.rabbitmq_key
         )
+        logging.debug('Initlialize Rabbitmq transport - done')
 
     def callback(self, filename, lines):
         timestamp = datetime.datetime.now().isoformat()
         for line in lines:
-            logging.debug('rabbitmq transport - sending message "%s"' % line)
+            logging.debug('rabbitmq callback - sending message "%s"' % line.rstrip("\n"))
             self.channel.basic_publish(
                 exchange=self.rabbitmq_exchange,
                 routing_key=self.rabbitmq_key,

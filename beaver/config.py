@@ -1,7 +1,7 @@
 import ConfigParser
 import os
 import glob
-import beaver.utils as utils
+import logging
 
 
 class Config():
@@ -24,7 +24,7 @@ class Config():
     '''
 
     def __init__(self, configfile):
-        utils.warn('processing config file %s' % configfile)
+        logging.info('processing config file %s' % os.path.realpath(configfile))
         defaults = {
             'add_field': '',
             'debug': '',

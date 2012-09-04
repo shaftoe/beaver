@@ -4,6 +4,7 @@ import argparse
 import os
 import beaver.worker
 import beaver.config
+import logging
 
 epilog_example = """
 Beaver provides an lightweight method for shipping local log
@@ -55,6 +56,9 @@ parser.set_defaults(
     transport=os.environ.get("BEAVER_TRANSPORT", 'stdout'),
     config='/dev/null'
 )
+
+# Setup logging facility
+logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', level=logging.DEBUG)
 
 
 args = parser.parse_args()

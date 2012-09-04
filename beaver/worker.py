@@ -3,7 +3,7 @@ import os
 import stat
 import sys
 import time
-import beaver.utils as utils
+import logging
 
 
 class Worker(object):
@@ -170,7 +170,7 @@ class Worker(object):
             if err.errno != errno.ENOENT:
                 raise
         else:
-            utils.log("[{0}] - watching logfile {1}".format(fid, fname))
+            logging.info("[{0}] - watching logfile {1}".format(fid, fname))
             self.files_map[fid] = file
 
     def unwatch(self, file, fid):
@@ -178,7 +178,7 @@ class Worker(object):
         # try to read it for the last time in case the
         # log rotator has written something in it.
         lines = self.readfile(file)
-        utils.log("[{0}] - un-watching logfile {1}".format(fid, file.name))
+        logging.info("[{0}] - un-watching logfile {1}".format(fid, file.name))
         del self.files_map[fid]
         if lines:
             self.callback(file.name, lines)
@@ -194,7 +194,7 @@ class Worker(object):
 
 
 def run_worker(options, fileconfig):
-    utils.log("Logging using the {0} transport".format(options.transport))
+    logging.info("Logging using the {0} transport".format(options.transport))
     if options.transport == 'redis':
         import beaver.redis_transport
         transport = beaver.redis_transport.RedisTransport(fileconfig)
@@ -211,17 +211,17 @@ def run_worker(options, fileconfig):
         raise Exception('Invalid transport {0}'.format(options.transport))
 
     try:
-        utils.log("Starting worker...")
+        logging.info("Starting worker...")
         l = Worker(options, transport.callback)
-        utils.log("Working...")
+        logging.info("Working...")
         l.loop()
     except KeyboardInterrupt:
-        utils.log("Shutting down. Please wait.")
+        logging.info("Shutting down. Please wait.")
         transport.interrupt()
-        utils.log("Shutdown complete.")
+        logging.info("Shutdown complete.")
         sys.exit(0)
     except Exception, e:
-        utils.log("Unhandled Exception: {0}".format(str(e)))
+        logging.info("Unhandled Exception: {0}".format(str(e)))
         print("Unhandled Exception: {0}".format(str(e)))
         transport.unhandled()
         sys.exit(1)

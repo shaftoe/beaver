@@ -24,7 +24,7 @@ class Config():
     '''
 
     def __init__(self, configfile):
-        utils.log('processing config file %s' % configfile)
+        utils.warn('processing config file %s' % configfile)
         defaults = {
             'add_field': '',
             'debug': '',

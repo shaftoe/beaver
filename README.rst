@@ -40,10 +40,12 @@ optional arguments::
     -f FILES [FILES ...], --files FILES [FILES ...]
                           space-separated filelist to watch. Overrides --path
                           argument
-    -t {rabbitmq,redis,stdout,zmq}, --transport {rabbitmq,redis,stdout,zmq}
-                          log transport method
     -c CONFIG, --configfile CONFIG
                           ini config file path
+    -t/--transport {rabbitmq,redis,stdout,zmq}
+                      log transport method
+                      default is stdout
+
 Background
 ==========
 
@@ -76,7 +78,7 @@ Example 5: Use environment variables to send logs from /var/log files to a redis
 
 Example 6: Zeromq listening on port 5556 (all interfaces)::
 
-    ZEROMQ_ADDRESS="tcp://*:5556" beaver -m bind
+    ZEROMQ_ADDRESS="tcp://*:5556" beaver -m bind -t zmq
 
     # logstash config:
     input { zeromq {
@@ -89,7 +91,7 @@ Example 6: Zeromq listening on port 5556 (all interfaces)::
 
 Example 7: Zeromq connecting to remote port 5556 on indexer::
 
-    ZEROMQ_ADDRESS="tcp://indexer:5556" beaver -m connect
+    ZEROMQ_ADDRESS="tcp://indexer:5556" beaver -m connect -t zmq
 
     # logstash config:
     input { zeromq {
